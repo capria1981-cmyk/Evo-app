@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chat - EVO</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>body{font-family:Inter,Arial;padding:16px;background:#fff}h1{margin-bottom:8px}a{color:#0366d6}</style>
+</head>
+<body>
+<h1>Chat — EVO</h1>
+<p>This page has two sections:</p>
+<ol>
+<li><strong>Local EVO chat</strong> — a lightweight client-side chat UI that can optionally call OpenAI if you paste your API key (key stays in your browser).</li>
+<li><strong>External agents</strong> — quick-launch buttons that open the official web apps for each AI tool.</li>
+</ol>
+
+<hr>
+
+<h2>1) EVO (Local Chat)</h2>
+<p><em>Note:</em> You can try EVO locally by pasting an OpenAI API key (sk-...). If you don't provide one, the UI still works as a local notepad-style chat.</p>
+
+<div id="localChat" style="max-width:760px;border:1px solid #eee;padding:12px;border-radius:10px;background:#fafafa">
+  <div style="display:flex;gap:8px;margin-bottom:8px">
+    <input id="openaiKey" placeholder="(optional) OpenAI API key (sk-...)" style="flex:1;padding:8px;border-radius:8px;border:1px solid #ddd">
+    <button id="clearKey">Clear</button>
+  </div>
+  <div id="messages" style="min-height:120px;max-height:320px;overflow:auto;padding:8px;border-radius:8px;background:white;border:1px solid #eee"></div>
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <input id="userInput" placeholder="Write a message to EVO..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd">
+    <button id="sendBtn">Send</button>
+  </div>
+  <p style="font-size:12px;color:#666;margin-top:8px">If you supply an OpenAI key, EVO will send your messages to OpenAI's Chat Completions API from your browser (your key is never sent to any server by this page).</p>
+</div>
+
+<hr>
+
+<h2>2) Open external agents</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;max-width:900px">
+<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>ChatGPT</strong><p style="margin:6px 0;font-size:13px;color:#666">OpenAI ChatGPT web app.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://chat.openai.com/"><button>Open</button></a><button onclick="copyLink(`https://chat.openai.com/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Claude (Anthropic)</strong><p style="margin:6px 0;font-size:13px;color:#666">Anthropic Claude.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://www.anthropic.com/"><button>Open</button></a><button onclick="copyLink(`https://www.anthropic.com/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>DALL·E (OpenAI)</strong><p style="margin:6px 0;font-size:13px;color:#666">DALL·E image generation.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://openai.com/index/dall-e/"><button>Open</button></a><button onclick="copyLink(`https://openai.com/index/dall-e/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Midjourney</strong><p style="margin:6px 0;font-size:13px;color:#666">Midjourney (Discord-based generation).</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://www.midjourney.com/"><button>Open</button></a><button onclick="copyLink(`https://www.midjourney.com/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Stable Diffusion (Hugging Face)</strong><p style="margin:6px 0;font-size:13px;color:#666">Stable Diffusion demo on Hugging Face Spaces.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://huggingface.co/spaces/stabilityai/stable-diffusion"><button>Open</button></a><button onclick="copyLink(`https://huggingface.co/spaces/stabilityai/stable-diffusion`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Gemini (Google)</strong><p style="margin:6px 0;font-size:13px;color:#666">Google's Gemini assistant.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://gemini.google.com/"><button>Open</button></a><button onclick="copyLink(`https://gemini.google.com/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Grammarly</strong><p style="margin:6px 0;font-size:13px;color:#666">Writing assistant.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://www.grammarly.com/"><button>Open</button></a><button onclick="copyLink(`https://www.grammarly.com/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Notion AI</strong><p style="margin:6px 0;font-size:13px;color:#666">Notion AI features.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://www.notion.com/product/ai"><button>Open</button></a><button onclick="copyLink(`https://www.notion.com/product/ai`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Copy.ai</strong><p style="margin:6px 0;font-size:13px;color:#666">Marketing copy generator.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://www.copy.ai/"><button>Open</button></a><button onclick="copyLink(`https://www.copy.ai/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Otter.ai</strong><p style="margin:6px 0;font-size:13px;color:#666">Meeting transcription.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://otter.ai/"><button>Open</button></a><button onclick="copyLink(`https://otter.ai/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>QuillBot</strong><p style="margin:6px 0;font-size:13px;color:#666">Paraphrase and rewrite.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://quillbot.com/"><button>Open</button></a><button onclick="copyLink(`https://quillbot.com/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Fireflies.ai</strong><p style="margin:6px 0;font-size:13px;color:#666">AI meeting assistant.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://fireflies.ai/"><button>Open</button></a><button onclick="copyLink(`https://fireflies.ai/`)">Copy Link</button></div></div>\n</div>
+
+<script>
+function appendMessage(author, text) {
+  const box = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.style.padding='8px'; el.style.borderBottom='1px solid #f1f1f1';
+  el.innerHTML = '<strong>'+author+':</strong> ' + (typeof text==='string' ? text.replace(/\n/g,'<br>') : JSON.stringify(text));
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+}
+document.getElementById('clearKey').addEventListener('click', ()=>{ document.getElementById('openaiKey').value = '' });
+
+async function sendToOpenAI(prompt, key) {
+  const url = 'https://api.openai.com/v1/chat/completions';
+  const body = { model: 'gpt-4o-mini', messages:[{role:'user', content: prompt}], max_tokens: 512 };
+  const resp = await fetch(url, {
+    method:'POST',
+    headers: { 'Content-Type':'application/json', 'Authorization': 'Bearer ' + key },
+    body: JSON.stringify(body)
+  });
+  if (!resp.ok) {
+    const txt = await resp.text();
+    throw new Error('OpenAI error: ' + resp.status + ' ' + txt);
+  }
+  const data = await resp.json();
+  // best-effort extraction for different response shapes
+  const msg = data.choices && data.choices[0] && (data.choices[0].message?.content || data.choices[0].text) || JSON.stringify(data);
+  return msg;
+}
+
+document.getElementById('sendBtn').addEventListener('click', async ()=>{
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+  appendMessage('You', text);
+  input.value='';
+  const key = document.getElementById('openaiKey').value.trim();
+  if (!key) {
+    appendMessage('EVO', 'Local note: ' + text);
+    return;
+  }
+  appendMessage('EVO', 'Thinking...');
+  try {
+    const reply = await sendToOpenAI(text, key);
+    // remove the 'Thinking...' placeholder (last EVO message)
+    const box = document.getElementById('messages');
+    if (box.lastChild && box.lastChild.textContent && box.lastChild.textContent.includes('Thinking')) {
+      box.removeChild(box.lastChild);
+    }
+    appendMessage('EVO', reply);
+  } catch (err) {
+    appendMessage('EVO', 'Error: ' + err.message);
+  }
+});
+
+function copyLink(u){ navigator.clipboard?.writeText(u).then(()=>alert('Link copied')) }
+</script>
+</body>
+</html>

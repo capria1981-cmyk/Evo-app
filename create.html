@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create - EVO</title></head>
+<body style="font-family:Inter,Arial;padding:16px;background:#fff">
+<h1>Create — EVO</h1>
+<p>Launch image generators and creative tools below. These buttons open the official services in a new tab.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;max-width:900px">
+<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>DALL·E (OpenAI)</strong><p style="margin:6px 0;font-size:13px;color:#666">DALL·E image generation.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://openai.com/index/dall-e/"><button>Open</button></a><button onclick="copyLink(`https://openai.com/index/dall-e/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Midjourney</strong><p style="margin:6px 0;font-size:13px;color:#666">Midjourney (Discord-based generation).</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://www.midjourney.com/"><button>Open</button></a><button onclick="copyLink(`https://www.midjourney.com/`)">Copy Link</button></div></div>\n<div style="border:1px solid #eee;padding:12px;border-radius:10px;background:#fff"><strong>Stable Diffusion (Hugging Face)</strong><p style="margin:6px 0;font-size:13px;color:#666">Stable Diffusion demo on Hugging Face Spaces.</p><div style="display:flex;gap:8px"><a target="_blank" rel="noopener" href="https://huggingface.co/spaces/stabilityai/stable-diffusion"><button>Open</button></a><button onclick="copyLink(`https://huggingface.co/spaces/stabilityai/stable-diffusion`)">Copy Link</button></div></div>\n</div>
+<script>function copyLink(u){ navigator.clipboard?.writeText(u).then(()=>alert('Link copied')) }</script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#ffffff"/>
+    <title>EVO AI Hub - All Your Free AI Tools in One Place</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+    /* (styles mostly unchanged from your original; coral class fixed to pink) */
+    :root {
+        --electric-blue: #0066FF;
+        --warm-coral: #FF6B6B;
+        --sage-green: #4ECDC4;
+        --sunshine-yellow: #FFE66D;
+        --deep-navy: #1A1D3A;
+        --soft-gray: #F8F9FA;
+        --light-lavender: #E8E2FF;
+    }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, var(--soft-gray) 0%, #ffffff 100%); min-height:100vh; }
+    .hero-title { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, var(--electric-blue), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .agent-card { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; border: 2px solid transparent; cursor: pointer; }
+    .agent-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); border-color: var(--electric-blue); }
+    .agent-card.writing { border-left: 4px solid var(--electric-blue); }
+    .agent-card.image { border-left: 4px solid var(--warm-coral); }
+    .agent-card.productivity { border-left: 4px solid var(--sage-green); }
+    .agent-card.chat { border-left: 4px solid var(--sunshine-yellow); }
+    .floating-shapes { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; }
+    .shape { position:absolute; opacity:0.08; animation: float 6s ease-in-out infinite; }
+    .shape:nth-child(1){ top:10%; left:10%; animation-delay:0s; }
+    .shape:nth-child(2){ top:20%; right:15%; animation-delay:2s; }
+    .shape:nth-child(3){ bottom:30%; left:20%; animation-delay:4s; }
+    .shape:nth-child(4){ bottom:10%; right:10%; animation-delay:1s; }
+    @keyframes float { 0%,100%{ transform: translateY(0px) rotate(0deg);} 50%{ transform: translateY(-20px) rotate(180deg);} }
+    .search-container { position: relative; }
+    .search-input { width:100%; border:2px solid #e5e7eb; border-radius:12px; padding:12px 16px 12px 48px; font-size:16px; transition: all 0.3s ease; background: white; }
+    .search-input:focus { border-color:var(--electric-blue); box-shadow:0 0 0 3px rgba(0,102,255,0.1); outline:none; }
+    .search-icon { position:absolute; left:16px; top:50%; transform: translateY(-50%); color:#6b7280; }
+    .category-filter { display:flex; gap:8px; overflow-x:auto; padding:0 4px; scrollbar-width:none; -ms-overflow-style:none; }
+    .category-filter::-webkit-scrollbar { display:none; }
+    .filter-btn { padding:8px 16px; border-radius:20px; border:2px solid #e5e7eb; background:white; color:#6b7280; font-size:14px; font-weight:500; white-space:nowrap; transition: all 0.3s; }
+    .filter-btn.active { background: var(--electric-blue); color:white; border-color:var(--electric-blue); }
+    .agent-icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:12px; }
+    .agent-icon.writing { background: linear-gradient(135deg, var(--electric-blue), #3b82f6); }
+    .agent-icon.image { background: linear-gradient(135deg, var(--warm-coral), #f87171); }
+    .agent-icon.productivity { background: linear-gradient(135deg, var(--sage-green), #34d399); }
+    .agent-icon.chat { background: linear-gradient(135deg, var(--sunshine-yellow), #fbbf24); }
+    .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:white; border-top:1px solid #e5e7eb; padding:12px 0; z-index:50; }
+    .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:#6b7280; text-decoration:none; font-size:12px; font-weight:500; transition: color 0.3s; }
+    .nav-item.active { color:var(--electric-blue); }
+    .nav-icon { width:24px; height:24px; display:flex; align-items:center; justify-content:center; }
+    .hero-section { background: linear-gradient(135deg, var(--light-lavender) 0%, #ffffff 100%); border-radius:20px; padding:24px; margin-bottom:24px; position:relative; overflow:hidden; }
+    .hero-image { position:absolute; right:-20px; top:50%; transform: translateY(-50%); width:120px; height:120px; opacity:0.8; }
+    .preview-container { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:1000; display:none; align-items:center; justify-content:center; padding:20px; }
+    .preview-content { background:white; border-radius:16px; padding:24px; max-width:400px; width:100%; text-align:center; }
+    .preview-icon { font-size:48px; margin-bottom:16px; }
+    .preview-title { font-size:20px; font-weight:600; margin-bottom:8px; color:var(--deep-navy); }
+    .preview-description { color:#6b7280; margin-bottom:20px; line-height:1.5; }
+    .preview-buttons { display:flex; gap:12px; justify-content:center; }
+    .preview-btn { padding:10px 20px; border-radius:8px; font-size:14px; font-weight:500; cursor:pointer; transition: all 0.3s ease; }
+    .preview-btn.primary { background:var(--electric-blue); color:white; border:none; }
+    .preview-btn.secondary { background:white; color:#6b7280; border:1px solid #e5e7eb; }
+    .preview-btn:hover { transform: translateY(-1px); }
+    </style>
+</head>
+<body>
+<div class="floating-shapes">
+    <div class="shape w-16 h-16 bg-blue-500 rounded-full"></div>
+    <div class="shape w-12 h-12 bg-pink-500 rounded-lg"></div>
+    <div class="shape w-20 h-20 bg-green-500 rounded-full"></div>
+    <div class="shape w-14 h-14 bg-yellow-500 rounded-lg"></div>
+</div>
+
+<div class="preview-container" id="previewModal">
+    <div class="preview-content">
+        <div class="preview-icon" id="previewIcon">🤖</div>
+        <h3 class="preview-title" id="previewTitle">AI Agent Preview</h3>
+        <p class="preview-description" id="previewDescription">This is a preview of the AI agent functionality.</p>
+        <div class="preview-buttons">
+            <button class="preview-btn primary" id="launchAgent">Launch Agent</button>
+            <button class="preview-btn secondary" id="closePreview">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="min-h-screen pb-20">
+    <header class="px-4 pt-8 pb-4">
+        <div class="hero-section">
+            <div class="relative z-10">
+                <h1 class="hero-title text-3xl font-bold mb-2">EVO AI Hub</h1>
+                <p class="text-gray-600 text-sm mb-4">All your favorite AI tools in one colorful, friendly place</p>
+                <div class="flex items-center gap-2 text-xs text-gray-500">
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">12+ Free Agents</span>
+                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">No Signup Required</span>
+                </div>
+            </div>
+            <img src="icons/icon-192.png" alt="EVO" class="hero-image" />
+        </div>
+    </header>
+
+    <div class="px-4 mb-6">
+        <div class="search-container mb-4">
+            <div class="search-icon">🔍</div>
+            <input type="text" class="search-input w-full" placeholder="Search AI agents..." id="searchInput">
+        </div>
+
+        <div class="category-filter mb-4">
+            <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="writing">Writing</button>
+            <button class="filter-btn" data-category="image">Image</button>
+            <button class="filter-btn" data-category="productivity">Productivity</button>
+            <button class="filter-btn" data-category="chat">Chat</button>
+        </div>
+    </div>
+
+    <div class="px-4">
+        <div class="grid grid-cols-2 gap-4" id="agentsGrid">
+            <!-- (agent cards kept as in original) -->
+
+<!-- EVO Chat -->
+<div class="agent-card chat" data-category="chat" data-name="evo" data-agent="EVO">
+    <div class="p-4">
+        <div class="agent-icon chat"><span>🚀</span></div>
+        <h3 class="font-semibold text-sm mb-1">EVO</h3>
+        <p class="text-xs text-gray-600 mb-3">Your advanced AI companion</p>
+        <div class="flex items-center justify-between">
+            <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Free</span>
+            <button class="text-blue-600 text-xs font-medium">Open →</button>
+        </div>
+    </div>
+</div>
+
+            <!-- ChatGPT -->
+            <div class="agent-card chat" data-category="chat" data-name="chatgpt">
+                <div class="p-4">
+                    <div class="agent-icon chat"><span>💬</span></div>
+                    <h3 class="font-semibold text-sm mb-1">ChatGPT</h3>
+                    <p class="text-xs text-gray-600 mb-3">Conversational AI for all your questions</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grammarly -->
+            <div class="agent-card writing" data-category="writing" data-name="grammarly">
+                <div class="p-4">
+                    <div class="agent-icon writing"><span>✍️</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Grammarly</h3>
+                    <p class="text-xs text-gray-600 mb-3">Perfect your writing with AI</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DALL-E -->
+            <div class="agent-card image" data-category="image" data-name="dalle">
+                <div class="p-4">
+                    <div class="agent-icon image"><span>🎨</span></div>
+                    <h3 class="font-semibold text-sm mb-1">DALL-E</h3>
+                    <p class="text-xs text-gray-600 mb-3">Create images from text</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notion AI -->
+            <div class="agent-card productivity" data-category="productivity" data-name="notion">
+                <div class="p-4">
+                    <div class="agent-icon productivity"><span>📝</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Notion AI</h3>
+                    <p class="text-xs text-gray-600 mb-3">Smart notes and organization</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claude -->
+            <div class="agent-card chat" data-category="chat" data-name="claude">
+                <div class="p-4">
+                    <div class="agent-icon chat"><span>🤖</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Claude</h3>
+                    <p class="text-xs text-gray-600 mb-3">Helpful and harmless AI</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copy.ai -->
+            <div class="agent-card writing" data-category="writing" data-name="copyai">
+                <div class="p-4">
+                    <div class="agent-icon writing"><span>🎯</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Copy.ai</h3>
+                    <p class="text-xs text-gray-600 mb-3">Marketing copy that converts</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Midjourney -->
+            <div class="agent-card image" data-category="image" data-name="midjourney">
+                <div class="p-4">
+                    <div class="agent-icon image"><span>🖼️</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Midjourney</h3>
+                    <p class="text-xs text-gray-600 mb-3">Artistic image generation</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Otter.ai -->
+            <div class="agent-card productivity" data-category="productivity" data-name="otter">
+                <div class="p-4">
+                    <div class="agent-icon productivity"><span>🎤</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Otter.ai</h3>
+                    <p class="text-xs text-gray-600 mb-3">AI meeting transcription</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gemini -->
+            <div class="agent-card chat" data-category="chat" data-name="gemini">
+                <div class="p-4">
+                    <div class="agent-icon chat"><span>⭐</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Gemini</h3>
+                    <p class="text-xs text-gray-600 mb-3">Google's AI assistant</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quillbot -->
+            <div class="agent-card writing" data-category="writing" data-name="quillbot">
+                <div class="p-4">
+                    <div class="agent-icon writing"><span>🔄</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Quillbot</h3>
+                    <p class="text-xs text-gray-600 mb-3">Paraphrase and rewrite text</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stable Diffusion -->
+            <div class="agent-card image" data-category="image" data-name="stablediffusion">
+                <div class="p-4">
+                    <div class="agent-icon image"><span>🎭</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Stable Diffusion</h3>
+                    <p class="text-xs text-gray-600 mb-3">Open source image AI</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fireflies -->
+            <div class="agent-card productivity" data-category="productivity" data-name="fireflies">
+                <div class="p-4">
+                    <div class="agent-icon productivity"><span>🔍</span></div>
+                    <h3 class="font-semibold text-sm mb-1">Fireflies</h3>
+                    <p class="text-xs text-gray-600 mb-3">AI meeting assistant</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Free</span>
+                        <button class="text-blue-600 text-xs font-medium">Open →</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="px-4 mt-8 mb-6">
+        <h2 class="font-semibold text-lg mb-4">Recent Activity</h2>
+        <div class="space-y-3">
+            <div class="bg-white rounded-lg p-3 flex items-center gap-3">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><span class="text-xs">✍️</span></div>
+                <div class="flex-1">
+                    <p class="text-sm font-medium">Grammarly checked your text</p>
+                    <p class="text-xs text-gray-500">2 minutes ago</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg p-3 flex items-center gap-3">
+                <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center"><span class="text-xs">🎨</span></div>
+                <div class="flex-1">
+                    <p class="text-sm font-medium">Generated image with DALL-E</p>
+                    <p class="text-xs text-gray-500">15 minutes ago</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg p-3 flex items-center gap-3">
+                <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center"><span class="text-xs">💬</span></div>
+                <div class="flex-1">
+                    <p class="text-sm font-medium">ChatGPT answered your question</p>
+                    <p class="text-xs text-gray-500">1 hour ago</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <div class="flex justify-around">
+        <a href="index.html" class="nav-item active"><div class="nav-icon">🏠</div><span>Home</span></a>
+        <a href="chat.html" class="nav-item"><div class="nav-icon">💬</div><span>Chat</span></a>
+        <a href="create.html" class="nav-item"><div class="nav-icon">✨</div><span>Create</span></a>
+        <a href="history.html" class="nav-item"><div class="nav-icon">📚</div><span>History</span></a>
+    </div>
+</nav>
+
+<script>
+// Service worker registration
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js').catch(function(err){ console.warn('SW registration failed:', err); });
+}
+
+// Modal elements
+const previewModal = document.getElementById('previewModal');
+const previewIcon = document.getElementById('previewIcon');
+const previewTitle = document.getElementById('previewTitle');
+const previewDescription = document.getElementById('previewDescription');
+const launchAgent = document.getElementById('launchAgent');
+const closePreview = document.getElementById('closePreview');
+
+function showPreview(agentData) {
+    previewIcon.textContent = agentData.icon;
+    previewTitle.textContent = agentData.name;
+    previewDescription.textContent = agentData.description;
+    previewModal.style.display = 'flex';
+    anime({ targets: '.preview-content', scale: [0.8,1], opacity:[0,1], duration:300, easing:'easeOutBack' });
+}
+function hidePreview() {
+    anime({ targets: '.preview-content', scale: [1,0.8], opacity:[1,0], duration:200, easing:'easeInQuad', complete: ()=>{ previewModal.style.display='none'; } });
+}
+closePreview.addEventListener('click', hidePreview);
+previewModal.addEventListener('click', (e)=> { if (e.target===previewModal) hidePreview(); });
+
+const searchInput = document.getElementById('searchInput');
+const agentCards = document.querySelectorAll('.agent-card');
+const filterBtns = document.querySelectorAll('.filter-btn');
+
+searchInput.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    agentCards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        const category = card.dataset.category.toLowerCase();
+        const agentName = card.dataset.agent ? card.dataset.agent.toLowerCase() : '';
+        const matchesSearch = name.includes(searchTerm) || category.includes(searchTerm) || agentName.includes(searchTerm);
+        if (matchesSearch) {
+            card.style.display = 'block';
+            anime({ targets: card, opacity: [0,1], translateY: [20,0], duration:300, easing:'easeOutQuad' });
+        } else { card.style.display = 'none'; }
+    });
+});
+
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const category = this.dataset.category;
+        agentCards.forEach(card => {
+            if (category === 'all' || card.dataset.category === category) {
+                card.style.display = 'block';
+                anime({ targets: card, opacity: [0,1], scale: [0.8,1], duration:400, delay: anime.stagger(50), easing: 'easeOutBack' });
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+
+agentCards.forEach(card => {
+    card.addEventListener('click', function() {
+        const agentName = this.dataset.name;
+        const agentCategory = this.dataset.category;
+        const agentDisplayName = this.dataset.agent || this.querySelector('h3').textContent;
+        anime({ targets: this, scale: [1,0.95,1], duration:200, easing:'easeInOutQuad' });
+        const agentData = { icon: this.querySelector('.agent-icon span').textContent, name: agentDisplayName, description: `Experience the power of ${agentDisplayName}. Click "Launch Agent" to start using this AI tool.` };
+        showPreview(agentData);
+        launchAgent.onclick = () => {
+            hidePreview();
+            setTimeout(() => {
+                if (agentCategory === 'chat') { window.location.href = 'chat.html?agent=' + agentName; }
+                else if (agentCategory === 'image') { window.location.href = 'create.html?agent=' + agentName; }
+                else { window.location.href = 'agent.html?agent=' + agentName + '&category=' + agentCategory; }
+            }, 200);
+        };
+    });
+});
+
+anime({ targets: '.agent-card', opacity: [0,1], translateY: [30,0], duration:600, delay: anime.stagger(100), easing:'easeOutQuad' });
+anime({ targets: '.shape', translateY: [-20,20], rotate: [0,360], duration:8000, loop:true, direction:'alternate', easing:'easeInOutSine', delay: anime.stagger(2000) });
+</script>
+</body>
+</html>
